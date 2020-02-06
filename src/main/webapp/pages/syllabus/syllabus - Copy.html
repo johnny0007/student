@@ -1,0 +1,279 @@
+<style>
+    .infodiv {
+        border: 2px solid red;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById("tableOfContent").style.display = "none"</script>
+<div onload="init();">
+    <div class="row card-header">
+        <div class="col">
+            <button class="btn btn-basic dropdown-toggle" data-toggle="dropdown">course</button>
+            <div class="dropdown-menu">
+                <div class="form-group card-body">
+                    <a class="dropdown-item" href="#" onClick="">B.Tech</a>
+                    <a class="dropdown-item" href="#" onClick="">BSC</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-basic dropdown-toggle" data-toggle="dropdown">stream</button>
+            <div class="dropdown-menu">
+                <div class="form-group card-body">
+                    <a class="dropdown-item" href="#" onClick="">ECE</a>
+                    <a class="dropdown-item" href="#" onClick="">CSE</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-basic dropdown-toggle" data-toggle="dropdown">semester</button>
+            <div class="dropdown-menu">
+                <div class="form-group card-body">
+                    <a class="dropdown-item" href="#" onClick="">1st</a>
+                    <a class="dropdown-item" href="#" onClick="">2nd</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-basic dropdown-toggle" data-toggle="dropdown">subject</button>
+            <div class="dropdown-menu">
+                <div class="form-group card-body">
+                    <a class="dropdown-item" href="#" onClick="">Math</a>
+                    <a class="dropdown-item" href="#" onClick="">English</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-basic" onclick="myFunction()">Get Data</button>
+        </div>
+    </div>
+    <form>
+        <div class="container border border-dark" id="tableOfContent">
+            <div style="text-align: center; font-weight: bold;">
+                <h2>Syllabus for Math</h2>
+            </div>
+            <div class="row border border-dark" style="text-align: center; font-weight: bold;">
+                Name of the Course
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark">Course Code : <input style="float: right;" type="text"
+                        placeholder="Enter course code" />
+                </div>
+                <div class="col">Semester : <input style="float: right;" type="text" placeholder="Enter Semester" />
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark">Duration : <input style="float: right;" type="text"
+                        placeholder="Enter Duration" />
+                </div>
+                <div class="col">Maximum Marks : <input style="float: right;" type="text"
+                        placeholder="Enter Maximum Marks" />
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark" style="text-align: center;font-weight: bold;">Teaching Scheme
+                </div>
+                <div class="col" style="text-align: center;font-weight: bold;">Examination Scheme
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark">Theory : <div style="float: right;">
+                        <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+                </div>
+                <div class="col">Internal Examination : <div style="float: right;">
+                        <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark">Tutorial : <div style="float: right;">
+                        <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+                </div>
+                <div class="col">Attendance+Assignment+interaction : <div style="float: right;">
+                        <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col border-right border-dark">Practical :
+                    <div style="float: right;">
+                        <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+                </div>
+                <div class="col">Final Examination : <div style="float: right;">
+                        <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+                </div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-6 border-right border-dark">Credit :
+                    <div style="float: right;">
+                        <input type="text" placeholder="Enter Credit" style="max-width: 4rem;" /> </div>
+                </div>
+                <!-- <div class="col"></div> -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-10" style="font-weight: bold;">Aim :</div>
+                <div class="col-sm-2"><button type="button" onclick="cloneAim()">Add Aim</button></div>
+                <!-- Need to add a add button to add row -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+                <div class="col-sm-10">The Students will be able to:</div>
+
+            </div>
+            <div id="aim">
+                <!-- dummy data start -->
+                <div class="row border border-dark" id="aimDiv">
+                    <div class="col-sm-1 border-right border-dark"><input type="text" placeholder="Enter serial no."
+                            style="max-width: 4rem;" />
+                    </div>
+                    <div class="col-sm-10"><textarea type="text" placeholder="Enter Aim here" style="width: 100%;"
+                            id="text" /></div>
+                    <div class="col-sm-1"><button type="button" onclick="deleteAim(this)">Delete</button></div>
+                </div>
+                <!-- dummy data end -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-10" style="font-weight: bold;">Objective :</div>
+                <div class="col-sm-2"><button type="button" onclick="cloneObj()">Add Object</button></div>
+                <!-- Need to add a add button to add row -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+                <div class="col-sm-11">The Students will be able to:</div>
+            </div>
+            <div id="obj">
+                <!-- dummy data start -->
+                <div class="row border border-dark" id="objDiv">
+                    <div class="col-sm-1 border-right border-dark"><input type="text" placeholder="Enter serial no."
+                            style="max-width: 4rem;" />
+                    </div>
+                    <div class="col-sm-10"><textarea type="text" placeholder="Enter Objective here" style="width: 100%;"
+                            id="text" /></div>
+                    <div class="col-sm-1"><button type="button" onclick="deleteAim(this)">Delete</button></div>
+                </div>
+                <!-- dummy data end -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col" style="font-weight: bold;">Pre-Requisite :</div>
+                <div class="col-sm-2"><button type="button" onclick="clonePreReq()">Add Pre-Req</button></div>
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+                <div class="col-sm-11">The Students should know :</div>
+            </div>
+            <div id="preReq">
+                <!-- dummy data start -->
+                <div class="row border border-dark" id="preReqDiv">
+                    <div class="col-sm-1 border-right border-dark"><input type="text" placeholder="Enter serial no."
+                            style="max-width: 4rem;" />
+                    </div>
+                    <div class="col-sm-10"><textarea type="text" placeholder="Enter Pre-Requisite here" style="width: 100%;"
+                            id="text" /></div>
+                    <div class="col-sm-1"><button type="button" onclick="deletePreReq(this)">Delete</button></div>
+                </div>
+                <!-- dummy data end -->
+            </div>
+            <div class="row border border-dark">
+                <div class="col-sm-9 border-right border-dark" style="font-weight: bold;text-align: center;">Contents
+                    (Theory)</div>
+                <div class="col-sm-1 border-right border-dark" style="font-weight: bold;text-align: center;">Hrs./Unit
+                </div>
+                <div class="col-sm-1 border-right border-dark" style="font-weight: bold;text-align: center;">Marks </div>
+                <div class="col-sm-1"><button type="button" onclick="cloneUnit()">Add Unit</button></div>
+
+            </div>
+            <!-- dummy data start -->
+            <div  id="unit">
+            <div class="row border border-dark" id="unitDiv">
+                <div class="col-sm-2 border-right border-dark"><textarea type="text" placeholder="Enter Unit here" style="width: 100%;"
+                    id="text" /></div>
+                    <div class="col-sm-7 border-right border-dark" id="subUnit">
+                <div  id="subUnitDiv">
+                    <textarea type="text" placeholder="Enter contents here" style="width: 90%;" id="text" />
+                    <button type="button" style="float: right;" onclick="deleteSubUnit(this)">Delete</button> </div>
+                </div>
+                <div class="col-sm-1 border-right border-dark" style="font-weight: bold;text-align: center;"><input type="text" placeholder="Enter hrs" style="max-width: 4rem;" /></div>
+                <div class="col-sm-1 border-right border-dark" style="font-weight: bold;text-align: center;"><input type="text" placeholder="Enter marks" style="max-width: 4rem;" /></div>
+                <div class="col-sm-1"><button type="button" onclick="cloneSubUnit()">Add Sub-Unit</button><button type="button" onclick="deleteUnit(this)">Delete</button></div>
+            </div>
+        </div>
+            <!-- dummy data end -->
+        </div>
+    </form>    
+</div>
+
+<script>
+    function myFunction() {
+        var x = document.getElementById("tableOfContent");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function cloneAim() {
+        var clone = document.getElementById('aimDiv').cloneNode(true); // "deep" clone
+        // var clone = (<div class="row border border-dark" id="aimDiv">
+        //     <div class="col-sm-1 border-right border-dark">1.</div>
+        //     <div class="col-sm-10">Primarily to develop verbal communication skills in English among students.
+        //             </div>
+        //     <div class="col-sm-1"><button type="button" onclick="Delete(this)">Delete</button></div>
+        // </div>).cloneNode(true);
+        document.getElementById("aim").appendChild(clone);
+    }
+
+    function deleteAim(button) {
+        var parent = button.parentNode;
+        var grand_father = parent.parentNode;
+        grand_father.parentNode.removeChild(grand_father);
+    }
+    function cloneObj() {
+        var clone = document.getElementById('objDiv').cloneNode(true); // "deep" clone
+        document.getElementById("obj").appendChild(clone);
+    }
+    function deleteObj(button) {
+        var parent = button.parentNode;
+        var grand_father = parent.parentNode;
+        grand_father.parentNode.removeChild(grand_father);
+    }
+    function clonePreReq() {
+        var clone = document.getElementById('preReqDiv').cloneNode(true); // "deep" clone
+        document.getElementById("preReq").appendChild(clone);
+    }
+    function deletePreReq(button) {
+        var parent = button.parentNode;
+        var grand_father = parent.parentNode;
+        grand_father.parentNode.removeChild(grand_father);
+    }
+    function cloneUnit() {
+        var clone = document.getElementById('unitDiv').cloneNode(true); // "deep" clone
+        document.getElementById("unit").appendChild(clone);
+    }
+    function cloneSubUnit() {
+        var clone = document.getElementById('subUnitDiv').cloneNode(true); // "deep" clone
+        document.getElementById("subUnit").appendChild(clone);
+    }
+    function deleteUnit(button) {
+        var parent = button.parentNode;
+        var grand_father = parent.parentNode;
+        grand_father.parentNode.removeChild(grand_father);
+    }
+    function deleteSubUnit(button) {
+        var parent = button.parentNode;
+        var grand_father = parent.parentNode;
+        grand_father.removeChild(parent);
+    }
+    //Below method need to try
+    $(document).ready(function () {
+        $("#btn1").click(function () {
+            $("p").append(" <b>Appended text</b>.");
+        });
+        $("#btn2").click(function () {
+            $("ol").append("<li>Appended item</li>");
+        });
+    });
+</script>

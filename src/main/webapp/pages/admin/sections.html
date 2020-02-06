@@ -1,0 +1,188 @@
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<div class="card-header">
+  <input
+    type="button"
+    value="New"
+    id="newSections"
+    class="btn btn-info btn-lg"
+    data-toggle="modal"
+    data-target="#newPopup"
+  />
+  <input
+    type="button"
+    value="Edit"
+    id="editSections"
+    class="btn btn-info btn-lg"
+  />
+  <input
+    type="button"
+    value="Delete"
+    id="deleteSections"
+    class="btn btn-info btn-lg"
+  />
+  <br />
+  <br />
+  <table
+    class="animated fadeIn card-body"
+    id="Sections"
+    class="display"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead></thead>
+  </table>
+  <div id="newPopup" class="modal fade" role="dialog"></div>
+  <div id="editPopup" class="modal fade" role="dialog"></div>
+</div>
+<input type="hidden" id="selectedRow" />
+<script>
+  var editor; // use a global for the submit and return data rendering in the collegess
+  var btnClicked;
+  $(document).ready(function() {
+    editor = $("#Sections").DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      scrollX: true,
+      select: {
+        style: "single"
+      },
+      ajax: {
+        url: serviceHost + "/section/get",
+        type: "POST"
+      },
+      columns: [
+        {
+          data: "streamId",
+          title: "Stream",
+          orderable: false
+        },
+        {
+          data: "section",
+          title: "Section",
+          orderable: true,
+          className: "searchable"
+        },
+        {
+          data: "seatCapacity",
+          title: "SeatCapacity",
+          orderable: false
+        },
+        {
+          data: "tic",
+          title: "TIC",
+          orderable: false
+        }
+      ]
+    });
+
+    $(".dataTables_scrollHead thead tr")
+      .clone(true)
+      .appendTo(".dataTables_scrollHead thead");
+    $(".dataTables_scrollHead thead tr:eq(1) th").each(function(i) {
+      var title = $(this).text();
+      $(this).removeClass("sorting");
+      if ($(this).hasClass("searchable")) {
+        $(this).html(
+          '<input id="search_' +
+            i +
+            '" type="text" placeholder="Search ' +
+            title +
+            '" style="max-width:120px;" />'
+        );
+
+        $("#search_" + i).on("input", function() {
+          if (editor.column(i).search() !== this.value) {
+            editor
+              .columns(i)
+              .search(this.value, true, false)
+              .draw();
+          }
+        });
+      } else {
+        $(this).html("");
+      }
+    });
+
+    var searchBox = document.getElementById("Sections_filter");
+    searchBox.setAttribute("style", "display:none");
+    $("#newPopup").load("./shared/popup.html");
+    $("#editPopup").load("./shared/popup.html");
+
+    $("#editPopup").on("show.bs.modal", function() {
+      $(this)
+        .find(".modal-header")
+        .find("h1")
+        .text("Update Sections");
+      var modalBody = $("#editPopup").find(".modal-body");
+      if (modalBody !== undefined) {
+        modalBody.load("./admin/addSections.html");
+      }
+    });
+
+    $("#newPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+
+    $("#editPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+  });
+
+  function clearModal(modal) {
+    modal
+      .find(".modal-header")
+      .find("h1")
+      .text("");
+    var modalBody = modal.find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.html("");
+    }
+  }
+  $("#newSections").click(function(e) {
+    debugger;
+    $("#selectedRow").val("");
+    btnClicked = "newSections";
+    $("#newPopup")
+      .find(".modal-header")
+      .find("h1")
+      .text("Add New Sections");
+    var modalBody = $("#newPopup").find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.load("./admin/addSections.html");
+    }
+  });
+  $("#editSections").click(function(e) {
+    btnClicked = "editSections";
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to edit");
+      return;
+    }
+    $("#selectedRow").val(JSON.stringify(selectedData[0]));
+    $("#editPopup").modal("toggle");
+  });
+
+  $("#deleteSections").click(function(e) {
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to delete");
+      return;
+    }
+    var result = confirm("Are you sure you want to delete the record?");
+    if (!result) {
+      return;
+    }
+    gridHandler.doGridOperation(
+      serviceHost + "/section/delete",
+      $("#Sections"),
+      "DELETE",
+      selectedData[0],
+      null
+    );
+  });
+</script>

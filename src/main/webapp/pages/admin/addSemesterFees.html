@@ -1,0 +1,119 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#SemesterFeesForm"), objMap);
+    }
+    $("#SemesterFeesForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addSemesterFees") 
+          gridHandler.doGridOperation(serviceHost + "/semesterFees/add",$("#SemesterFees"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateSemesterFees")
+          gridHandler.doGridOperation(serviceHost + "/semesterFees/update",$("#SemesterFees"),"PATCH",formData,$("#editPopup"));
+    });
+    if (btnClicked === "newSemesterFees") {
+      document.getElementById("addSemesterFees").style.display = "inline";
+      document.getElementById("updateSemesterFees").style.display = "none";
+    } else if (btnClicked === "editSemesterFees") {
+      document.getElementById("addSemesterFees").style.display = "none";
+      document.getElementById("updateSemesterFees").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="SemesterFeesForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+    <label class="col-sm-3 my-2" style="text-align: right" for="courseId"
+      >Course ID:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="courseId"
+        placeholder="Enter Course ID"
+        name="courseId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="semesterNo"
+      >Semester No:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="semesterNo"
+        placeholder="Semester No"
+        name="semesterNo"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="currency">Currency:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="currency"
+        placeholder="Currency"
+        name="currency"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="fees">Fees:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="fees"
+        placeholder="Fees"
+        name="fees"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addSemesterFees"
+        id="addSemesterFees"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateSemesterFees"
+        id="updateSemesterFees"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

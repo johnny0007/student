@@ -1,0 +1,105 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<!-- <div style="text-align: center " class="card-header"><h4>Add New User</h4></div> -->
+<!-- <input type="hidden" id="customerIdHidden" value=0> -->
+<div class="form-group row">
+  <label class="col-sm-3" style="text-align: right" for="firstName"
+    >First Name:</label
+  >
+  <div class="col-sm-3 item-align">
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      placeholder="Student First Name"
+      name="firstName"
+    />
+  </div>
+  <br />
+  <label class="col-sm-3" style="text-align: right" for="middleName"
+    >Middle Name:</label
+  >
+  <div class="col-sm-3 item-align">
+    <input
+      type="text"
+      class="form-control"
+      id="middleName"
+      placeholder="Student Middle Name"
+      name="middleName"
+    />
+  </div>
+  <label class="col-sm-3" style="text-align: right" for="lastName"
+    >Last Name:</label
+  >
+  <div class="col-sm-3 item-align">
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      placeholder="Student Last Name"
+      name="lastName"
+    />
+  </div>
+  <label class="col-sm-3 label-align" for="phoneNo">Mobile Number:</label>
+  <div class="col-sm-3 item-align">
+    <input
+      type="number"
+      size="10"
+      class="form-control"
+      id="phoneNo"
+      placeholder="Enter Mobile"
+      name="phoneNo"
+    />
+  </div>
+  <label class="col-sm-3 label-align" for="email">Email:</label>
+  <div class="col-sm-3 item-align">
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      placeholder="Enter Email"
+      name="email"
+    />
+  </div>
+
+  <label class="col-sm-3 label-align" for="userGroupId">User Type:</label>
+  <div class="col-sm-3 item-align">
+    <select class="form-control" id="userGroupId" name="userGroupId">
+      <option value="-1">--Select--</option>
+      <option value="1">Admin</option>
+      <option value="2">Student</option>
+    </select>
+  </div>
+  <label class="col-sm-3 label-align" for="gender">Gender:</label>
+  <div class="col-sm-3 item-align">
+    <select class="form-control" id="gender" name="gender">
+      <option value="-1">--Select--</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <label class="col-sm-3 label-align" for="password">Password:</label>
+  <div class="col-sm-3 item-align">
+    <input
+      type="text"
+      class="form-control"
+      id="password"
+      placeholder="Password"
+      name="password"
+    />
+  </div>
+
+  <label class="col-sm-3 label-align" for="dob">Date of Birth:</label>
+  <div class="col-sm-3 item-align">
+    <input type="date" class="form-control" id="dob" name="dob" />
+  </div>
+</div>

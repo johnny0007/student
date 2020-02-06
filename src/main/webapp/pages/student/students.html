@@ -1,0 +1,387 @@
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<div>
+<!--  <input
+    type="button"
+    value="Edit"
+    id="editStudents"
+    class="btn btn-info btn-lg"
+  />-->
+  <input
+    type="button"
+    value="Delete"
+    id="deleteStudents"
+    class="btn btn-info btn-lg"
+  />
+  <br />
+  <br />
+  <table
+    class="animated fadeIn "
+    id="Students"
+    class="display"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead></thead>
+  </table>
+  <div id="newPopup" class="modal fade" role="dialog"></div>
+  <div id="editPopup" class="modal fade" role="dialog"></div>
+</div>
+<input type="hidden" id="selectedRow" />
+<script>
+  var editor; // use a global for the submit and return data rendering in the collegess
+  var btnClicked;
+  $(document).ready(function() {
+    editor = $("#Students").DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      scrollX: true,
+      select: {
+        style: "single"
+      },
+      ajax: {
+        url: serviceHost + "/student/get",
+        type: "POST"
+      },
+      columns: [
+        {
+          data: "user.userId",
+          title: "Id",
+          orderable: false,
+          searchable: true,
+          className: "searchable"
+        },
+        {
+          data: "user.firstName",
+          title: "First Name",
+          orderable: false,
+          searchable: true,
+          className: "searchable"
+        },
+        {
+          data: "user.middleName",
+          title: "Middle Name",
+          orderable: false,
+          searchable: false,
+          className: "searchable"
+        },
+        {
+          data: "user.lastName",
+          title: "Last Name",
+          orderable: false,
+          searchable: true,
+          className: "searchable"
+        },
+        {
+          data: "user.phoneNo",
+          title: "Phone No",
+          orderable: false
+        },
+        {
+          data: "user.email",
+          title: "Email Id",
+          orderable: false,
+          searchable: true,
+          className: "searchable"
+        },
+        {
+          data: "user.userGroupId",
+          title: "User Type",
+          orderable: false
+        },
+        {
+          data: "user.gender",
+          title: "Gender",
+          orderable: false
+        },
+        {
+          data: "user.password",
+          title: "Password",
+          orderable: false,
+          searchable: false,
+          className: "hidden"
+        },
+        {
+          data: "user.dob",
+          title: "Date of Birth",
+          orderable: false
+        },
+        {
+          data: "user.status",
+          title: "Status",
+          orderable: false
+          // className: "searchable"
+        },
+        {
+          data: "collegeId",
+          title: "collegeId",
+          orderable: false
+          // className: "searchable"
+        },
+        {
+          data: "courseId",
+          title: "courseId",
+          orderable: false
+          // className: "searchable"
+        },
+        {
+          data: "streamId",
+          title: "streamId",
+          orderable: false
+          // className: "searchable"
+        },
+        {
+          data: "govtIdNumber",
+          title: "Govt Id Number",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "govtIdType",
+          title: "Govt Id Type",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "admissionMode",
+          title: "Admission Mode",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "rank",
+          title: "Rank",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "entranceExam",
+          title: "Entrance Exam",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "secondarySchoolName",
+          title: "Secondary School Name",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "secondaryBoard",
+          title: "Secondary Board",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "secondaryMarks",
+          title: "Secondary Marks",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "higherSecondarySchoolName",
+          title: "Higher Secondary School Name",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "higherSecondaryBoard",
+          title: "Higher Secondary Board",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "higherSecondaryMarks",
+          title: "Higher Secondary Marks",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentFirstName",
+          title: "Parent First Name",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentMiddleName",
+          title: "Parent Middle Name",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentLastName",
+          title: "Parent Last Name",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentRelation",
+          title: "Parent Relation",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentPhoneNo",
+          title: "Parent Phone No",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "parentEmail",
+          title: "Parent Email",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "passOutYear",
+          title: "Pass Out Year",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "yearId",
+          title: "Academic Year",
+          orderable: false
+        },
+        {
+          data: "status",
+          title: "Current Status",
+          orderable: false
+        },
+        {
+          data: "address.addressID",
+          title: "Address ID",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.address",
+          title: "Address",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.po",
+          title: "PO",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.ps",
+          title: "PS",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.state",
+          title: "State",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.nationality",
+          title: "Nationality",
+          orderable: false,
+          className: "searchable"
+        },
+        {
+          data: "address.zip",
+          title: "ZIP",
+          orderable: false,
+          className: "searchable"
+        }
+      ]
+    });
+    $(".dataTable thead tr")
+      .clone(true)
+      .appendTo(".dataTable thead");
+    $(".dataTable thead tr:eq(1) th").each(function(i) {
+      var title = $(this).text();
+      $(this).removeClass("sorting");
+      if ($(this).hasClass("searchable")) {
+        $(this).html(
+          '<input id="search_' +
+            i +
+            '" type="text" placeholder="Search ' +
+            title +
+            '" style="max-width:120px;" />'
+        );
+
+        $("#search_" + i).on("input", function() {
+          if (editor.column(i).search() !== this.value) {
+            editor
+              .columns(i)
+              .search(this.value, true, false)
+              .draw();
+          }
+        });
+      } else {
+        $(this).html("");
+      }
+    });
+
+    var searchBox = document.getElementById("Students_filter");
+    searchBox.setAttribute("style", "display:none");
+    $("#newPopup").load("./shared/popup.html");
+    $("#editPopup").load("./shared/popup.html");
+
+    $("#editPopup").on("show.bs.modal", function() {
+      $(this)
+        .find(".modal-header")
+        .find("h1")
+        .text("Update Students");
+      var modalBody = $("#editPopup").find(".modal-body");
+      if (modalBody !== undefined) {
+        modalBody.load("./user/addStudents.html");
+      }
+    });
+
+    $("#newPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+
+    $("#editPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+  });
+
+  function clearModal(modal) {
+    modal
+      .find(".modal-header")
+      .find("h1")
+      .text("");
+    var modalBody = modal.find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.html("");
+    }
+  }
+  $("#editStudents").click(function(e) {
+    btnClicked = "editStudents";
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to edit");
+      return;
+    }
+    $("#selectedRow").val(JSON.stringify(selectedData[0]));
+    $("#editPopup").modal("toggle");
+
+    //
+  });
+
+  $("#deleteStudents").click(function(e) {
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to delete");
+      return;
+    }
+    var result = confirm("Are you sure you want to delete the record?");
+    if (!result) {
+      return;
+    }
+    gridHandler.doGridOperation(serviceHost + "/student/delete",$("#Students"),"DELETE",selectedData[0],null);
+  });
+</script>

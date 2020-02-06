@@ -1,0 +1,113 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+      debugger
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      var jsonData=JSON.parse($("#selectedRow").val());
+      prepareObjectMap(jsonData, "", objMap);
+      Object.keys(jsonData["classes"]).forEach(function(key){
+          document.getElementById("class").setAttribute("name","classes."+key);
+      });
+      populateFrmDataFromMapper($("#timeTableFrm"), objMap);
+    }
+    $("#timeTableFrm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addTime") 
+           gridHandler.doGridOperation(serviceHost + "/timeTable/add",$("#timeTable"),"POST",formData,$("#editPopup"));
+      else if (submittedBtn === "updateTime") 
+          gridHandler.doGridOperation(serviceHost + "/timeTable/update",$("#timeTable"),"PATCH",formData,$("#editPopup"));
+    });
+    
+    if ($("#class").val()==="") {
+      document.getElementById("addTime").style.display = "inline";
+      document.getElementById("updateTime").style.display = "none";
+    } else {
+      document.getElementById("addTime").style.display = "none";
+      document.getElementById("updateTime").style.display = "inline";
+    }
+    
+    $(".frmBtn").click(function() {
+        submittedBtn = $(this).attr("name");
+  });
+  });
+</script>
+<form id="timeTableFrm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+    <label class="col-sm-3" hidden style="text-align: right" for="teacherId"
+      >Teacher ID:</label
+    >
+    <div class="col-sm-3 item-align" hidden>
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="teacherId"
+        placeholder="Enter Teacher Id"
+        name="teacherId"
+      />
+    </div>
+    <label class="col-sm-3 label-align" for="day">Day</label>
+    <div class="col-sm-3 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="day"
+        placeholder="Day"
+        name="day" disabled
+      />
+    </div>
+    <label class="col-sm-3 label-align" for="class">Subject</label>
+    <div class="col-sm-3 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="class"
+        placeholder="Class"
+        name=""
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addTime"
+        id="addTime"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateTime"
+        id="updateTime"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

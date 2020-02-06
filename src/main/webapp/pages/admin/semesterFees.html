@@ -1,0 +1,191 @@
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<div class="card-header">
+  <input
+    type="button"
+    value="New"
+    id="newSemesterFees"
+    class="btn btn-info btn-lg"
+    data-toggle="modal"
+    data-target="#newPopup"
+  />
+  <input
+    type="button"
+    value="Edit"
+    id="editSemesterFees"
+    class="btn btn-info btn-lg"
+  />
+  <input
+    type="button"
+    value="Delete"
+    id="deleteSemesterFees"
+    class="btn btn-info btn-lg"
+  />
+  <br />
+  <br />
+  <table
+    class="animated fadeIn card-body"
+    id="SemesterFees"
+    class="display"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead></thead>
+  </table>
+  <div id="newPopup" class="modal fade" role="dialog"></div>
+  <div id="editPopup" class="modal fade" role="dialog"></div>
+</div>
+<input type="hidden" id="selectedRow" />
+<script>
+  var editor; // use a global for the submit and return data rendering in the collegess
+  var btnClicked;
+  $(document).ready(function() {
+    editor = $("#SemesterFees").DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      scrollX: true,
+      select: {
+        style: "single"
+      },
+      ajax: {
+        url: serviceHost + "/semesterFees/get",
+        type: "POST"
+      },
+      columns: [
+        {
+          data: "courseId",
+          title: "Course Id",
+          orderable: false
+        },
+        {
+          data: "semesterNo",
+          title: "Semester No",
+          orderable: true,
+          className: "searchable"
+        },
+        {
+          data: "currency",
+          title: "Currency",
+          orderable: false
+        },
+        {
+          data: "fees",
+          title: "Fees",
+          orderable: true,
+          className: "searchable"
+        }
+      ]
+    });
+
+   $(".dataTables_scrollHead thead tr")
+      .clone(true)
+      .appendTo(".dataTables_scrollHead thead");
+    $(".dataTables_scrollHead thead tr:eq(1) th").each(function(i) {
+      var title = $(this).text();
+      $(this).removeClass("sorting");
+      if ($(this).hasClass("searchable")) {
+        $(this).html(
+          '<input id="search_' +
+            i +
+            '" type="text" placeholder="Search ' +
+            title +
+            '" style="max-width:120px;" />'
+        );
+
+        $("#search_" + i).on("input", function() {
+          if (editor.column(i).search() !== this.value) {
+            editor
+              .columns(i)
+              .search(this.value, true, false)
+              .draw();
+          }
+        });
+      } else {
+        $(this).html("");
+      }
+    });
+
+    var searchBox = document.getElementById("SemesterFees_filter");
+    searchBox.setAttribute("style", "display:none");
+    $("#newPopup").load("./shared/popup.html");
+    $("#editPopup").load("./shared/popup.html");
+
+    $("#editPopup").on("show.bs.modal", function() {
+      $(this)
+        .find(".modal-header")
+        .find("h1")
+        .text("Update SemesterFees");
+      var modalBody = $("#editPopup").find(".modal-body");
+      if (modalBody !== undefined) {
+        modalBody.load("./admin/addSemesterFees.html");
+      }
+    });
+
+    $("#newPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+
+    $("#editPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+  });
+
+  function clearModal(modal) {
+    modal
+      .find(".modal-header")
+      .find("h1")
+      .text("");
+    var modalBody = modal.find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.html("");
+    }
+  }
+  $("#newSemesterFees").click(function(e) {
+    debugger;
+    $("#selectedRow").val("");
+    btnClicked = "newSemesterFees";
+    $("#newPopup")
+      .find(".modal-header")
+      .find("h1")
+      .text("Add New SemesterFees");
+    var modalBody = $("#newPopup").find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.load("./admin/addSemesterFees.html");
+    }
+  });
+  $("#editSemesterFees").click(function(e) {
+    btnClicked = "editSemesterFees";
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to edit");
+      return;
+    }
+    $("#selectedRow").val(JSON.stringify(selectedData[0]));
+    $("#editPopup").modal("toggle");
+
+    //
+  });
+
+  $("#deleteSemesterFees").click(function(e) {
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to delete");
+      return;
+    }
+    var result = confirm("Are you sure you want to delete the record?");
+    if (!result) {
+      return;
+    }
+    gridHandler.doGridOperation(
+      serviceHost + "/semesterFees/delete",
+      $("#SemesterFees"),
+      "DELETE",
+      selectedData[0],
+      null
+    );
+  });
+</script>

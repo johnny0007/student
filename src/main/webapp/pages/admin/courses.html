@@ -1,0 +1,199 @@
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<div class="card-header">
+  <input
+    type="button"
+    value="New"
+    id="newCourses"
+    class="btn btn-info btn-lg"
+    data-toggle="modal"
+    data-target="#newPopup"
+  />
+  <input
+    type="button"
+    value="Edit"
+    id="editCourses"
+    class="btn btn-info btn-lg"
+  />
+  <input
+    type="button"
+    value="Delete"
+    id="deleteCourses"
+    class="btn btn-info btn-lg"
+  />
+  <br />
+  <br />
+  <table
+    class="animated fadeIn card-body"
+    id="Courses"
+    class="display"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead></thead>
+  </table>
+  <div id="newPopup" class="modal fade" role="dialog"></div>
+  <div id="editPopup" class="modal fade" role="dialog"></div>
+</div>
+<input type="hidden" id="selectedRow" />
+<script>
+  var editor; // use a global for the submit and return data rendering in the collegess
+  var btnClicked;
+  $(document).ready(function() {
+    editor = $("#Courses").DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      scrollX: true,
+      select: {
+        style: "single"
+      },
+      ajax: {
+        url: serviceHost + "/course/get",
+        type: "POST"
+      },
+      columns: [
+        {
+          data: "courseId",
+          title: "Course Id",
+          orderable: false,
+          className: "hidden"
+        },
+        {
+          data: "course",
+          title: "Course",
+          orderable: true,
+          className: "searchable"
+        },
+        {
+          data: "durationYears",
+          title: "Duration Years",
+          orderable: true,
+          searchable: false
+        },
+        {
+          data: "semesterPerYear",
+          title: "Semesters Per Year",
+          orderable: true,
+          searchable: false
+        },
+        {
+          data: "collegeId",
+          title: "College Id",
+          orderable: false
+          //className: "searchable"
+        }
+      ]
+    });
+
+    $(".dataTables_scrollHead thead tr")
+      .clone(true)
+      .appendTo(".dataTables_scrollHead thead");
+    $(".dataTables_scrollHead thead tr:eq(1) th").each(function(i) {
+      var title = $(this).text();
+      $(this).removeClass("sorting");
+      if ($(this).hasClass("searchable")) {
+        $(this).html(
+          '<input id="search_' +
+            i +
+            '" type="text" placeholder="Search ' +
+            title +
+            '" style="max-width:120px;" />'
+        );
+
+        $("#search_" + i).on("input", function() {
+          if (editor.column(i).search() !== this.value) {
+            editor
+              .columns(i)
+              .search(this.value, true, false)
+              .draw();
+          }
+        });
+      } else {
+        $(this).html("");
+      }
+    });
+
+    var searchBox = document.getElementById("Courses_filter");
+    searchBox.setAttribute("style", "display:none");
+    $("#newPopup").load("./shared/popup.html");
+    $("#editPopup").load("./shared/popup.html");
+
+    $("#editPopup").on("show.bs.modal", function() {
+      $(this)
+        .find(".modal-header")
+        .find("h1")
+        .text("Update Academic Year");
+      var modalBody = $("#editPopup").find(".modal-body");
+      if (modalBody !== undefined) {
+        modalBody.load("./admin/addCourses.html");
+      }
+    });
+
+    $("#newPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+
+    $("#editPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+  });
+
+  function clearModal(modal) {
+    modal
+      .find(".modal-header")
+      .find("h1")
+      .text("");
+    var modalBody = modal.find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.html("");
+    }
+  }
+  $("#newCourses").click(function(e) {
+    debugger;
+    $("#selectedRow").val("");
+    btnClicked = "newCourses";
+    $("#newPopup")
+      .find(".modal-header")
+      .find("h1")
+      .text("Add New Academic Year");
+    var modalBody = $("#newPopup").find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.load("./admin/addCourses.html");
+    }
+  });
+  $("#editCourses").click(function(e) {
+    btnClicked = "editCourses";
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to edit");
+      return;
+    }
+    $("#selectedRow").val(JSON.stringify(selectedData[0]));
+    $("#editPopup").modal("toggle");
+
+    //
+  });
+
+  $("#deleteCourses").click(function(e) {
+    var selectedData = editor.rows(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to delete");
+      return;
+    }
+    var result = confirm("Are you sure you want to delete the record?");
+    if (!result) {
+      return;
+    }
+    gridHandler.doGridOperation(
+      serviceHost + "/course/delete",
+      $("#Courses"),
+      "DELETE",
+      selectedData[0],
+      null
+    );
+  });
+</script>

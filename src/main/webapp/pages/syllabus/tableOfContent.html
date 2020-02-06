@@ -1,0 +1,139 @@
+<div class="container border border-dark">
+    <div class="row border border-dark" style="text-align: center; font-weight: bold;">
+        Name of the Course
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark">Course Code : <input style="float: right;" type="text"
+                placeholder="Enter course code" />
+        </div>
+        <div class="col">Semester : <input style="float: right;" type="text" placeholder="Enter Semester" />
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark">Duration : <input style="float: right;" type="text"
+                placeholder="Enter Duration" />
+        </div>
+        <div class="col">Maximum Marks : <input style="float: right;" type="text" placeholder="Enter Maximum Marks" />
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark" style="text-align: center;font-weight: bold;">Teaching Scheme
+        </div>
+        <div class="col" style="text-align: center;font-weight: bold;">Examination Scheme
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark">Theory : <div style="float: right;">
+                <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+        </div>
+        <div class="col">Internal Examination : <div style="float: right;">
+                <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark">Tutorial : <div style="float: right;">
+                <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+        </div>
+        <div class="col">Attendance+Assignment+interaction : <div style="float: right;">
+                <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col border-right border-dark">Practical :
+            <div style="float: right;">
+                <input type="text" placeholder="Enter Duration" style="max-width: 4rem;" /> /week</div>
+        </div>
+        <div class="col">Final Examination : <div style="float: right;">
+                <input type="text" placeholder="Enter marks" style="max-width: 4rem;" /> marks</div>
+        </div>
+    </div>
+    <div class="row border border-dark">
+        <div class="col-sm-6 border-right border-dark">Credit :
+            <div style="float: right;">
+                <input type="text" placeholder="Enter Credit" style="max-width: 4rem;" /> </div>
+        </div>
+        <!-- <div class="col"></div> -->
+    </div>
+    <div class="row border border-dark">
+        <div class="col" style="font-weight: bold;">Aim :</div>
+        <!-- Need to add a add button to add row -->
+    </div>
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+        <div class="col-sm-11">The Students will be able to:</div>
+    </div>
+    <!-- dummy data start -->
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">1.</div>
+        <div class="col-sm-11">Primarily to develop verbal communication skills in English among students.</div>
+    </div>
+    <!-- dummy data end -->
+    <div class="row border border-dark">
+        <div class="col" style="font-weight: bold;">Objective :</div>
+        <!-- Need to add a add button to add row -->
+    </div>
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+        <div class="col-sm-11">The Students will be able to:</div>
+    </div>
+    <!-- dummy data start -->
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">1.</div>
+        <div class="col-sm-11">To increase power of comprehending a written text.</div>
+    </div>
+    <!-- dummy data end -->
+    <div class="row border border-dark">
+        <div class="col" style="font-weight: bold;">Pre-Requisite :</div>
+        <!-- Need to add a add button to add row -->
+    </div>
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">Sl. No.</div>
+        <div class="col-sm-11">The Students should know :</div>
+    </div>
+    <!-- dummy data start -->
+    <div class="row border border-dark">
+        <div class="col-sm-1 border-right border-dark">1.</div>
+        <div class="col-sm-11">Knowledge of reading & writing English.</div>
+    </div>
+    <!-- dummy data end -->
+    <div class="row border border-dark">
+        <div class="col-sm-8 border-right border-dark" style="font-weight: bold;">Contents (Theory)</div>
+        <div class="col-sm-2 border-right border-dark" style="font-weight: bold;">Hrs./Unit </div>
+        <div class="col-sm-2" style="font-weight: bold;">Marks </div>
+    </div>
+    <!-- dummy data start -->
+    <div class="row border border-dark">
+        <div class="col-sm-3 border-right border-dark" style="font-weight: bold;">Unit:1 Comprehending a text </div>
+        <div class="col-sm-5 border-right border-dark" style="font-weight: bold;">1.1Identifying important information &
+            keywords using SQ3R (i.e. survey, question, read, recite, and review) or similar technique and linking
+            words. 1.2Comprehension –Responding to multiple choice& short-answer questions from the text; making
+            sentences with marked words from the text to bring out the meaning of the words, filling up gaps to complete
+            information structure, Identifying central idea of the text. </div>
+        <div class="col-sm-2 border-right border-dark" style="font-weight: bold;">8 </div>
+        <div class="col-sm-2" style="font-weight: bold;">20 </div>
+    </div>
+    <!-- dummy data end -->
+</div>
+
+<script>
+    function addRow() {
+        const div = document.createElement('div');
+
+        div.className = 'row';
+
+        div.innerHTML = `
+    <input type="text" name="name" value="" />
+    <input type="text" name="value" value="" />
+    <label> 
+      <input type="checkbox" name="check" value="1" /> Checked? 
+    </label>
+    <input type="button" value="-" onclick="removeRow(this)" />
+  `;
+
+        document.getElementById('content').appendChild(div);
+    }
+
+    function removeRow(input) {
+        document.getElementById('content').removeChild(input.parentNode);
+    }
+</script>

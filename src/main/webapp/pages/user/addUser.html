@@ -1,0 +1,214 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+
+  $(document).ready(function() {
+        if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#addUserForm"), objMap);
+    }
+    $("#addUserForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      
+      if($("#userGroupId").val()==="-1")
+      {
+          alert("Please select a user group");
+          return;
+      }
+      if($("#gender").val()==="-1")
+      {
+          alert("Please select a gender");
+          return;
+      }
+      // Call our function to get the form data.
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addUser") 
+        gridHandler.doGridOperation(serviceHost + "/users/add",$("#users"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateUser")
+        gridHandler.doGridOperation(serviceHost + "/users/update",$("#users"),"PATCH",formData,$("#editPopup"));
+    });
+    if (btnClicked === "newUser") {
+      document.getElementById("addUser").style.display = "inline";
+      document.getElementById("updateUser").style.display = "none";
+      $("#email").prop("disabled",false);
+      $("#firstName").prop("disabled",false);
+      $("#middleName").prop("disabled",false);
+      $("#lastName").prop("disabled",false);
+      $("#phoneNo").prop("disabled",false);
+      $("#gender").prop("disabled",false);
+    } else if (btnClicked === "editUser") {
+      document.getElementById("addUser").style.display = "none";
+      document.getElementById("updateUser").style.display = "inline";
+      $("#email").prop("disabled",true);
+      $("#firstName").prop("disabled",true);
+      $("#middleName").prop("disabled",true);
+      $("#lastName").prop("disabled",true);
+      $("#phoneNo").prop("disabled",true);
+      $("#gender").prop("disabled",true);
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="addUserForm">
+  <div class="form-group row card-body w-100 h-100" id="userDetails">
+    <div class="form-group row">
+      <label
+        class="col-sm-3 label-align my-2"
+        style="text-align: right"
+        for="userId"
+        >User Id:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="userId"
+          placeholder="User Id"
+          name="userId" disabled
+        />
+      </div>
+      <label
+        class="col-sm-3 label-align my-2"
+        style="text-align: right"
+        for="firstName"
+        >First Name:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          placeholder="Student First Name"
+          name="firstName" required
+        />
+      </div>
+
+      <label
+        class="col-sm-3 label-align my-2"
+        style="text-align: right"
+        for="middleName"
+        >Middle Name:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="middleName"
+          placeholder="Student Middle Name"
+          name="middleName"
+        />
+      </div>
+
+      <label
+        class="col-sm-3 label-align my-2"
+        style="text-align: right"
+        for="lastName"
+        >Last Name:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          placeholder="Student Last Name"
+          name="lastName" required
+        />
+      </div>
+
+      <label class="col-sm-3 label-align my-2" for="phoneNo"
+        >Mobile Number:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="number"
+          size="10"
+          class="form-control"
+          id="phoneNo"
+          placeholder="Enter Mobile"
+          name="phoneNo" required
+        />
+      </div>
+
+      <label class="col-sm-3 label-align my-2" for="email">Email:</label>
+      <div class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="email"
+          placeholder="Enter Email"
+          name="email" required
+        />
+      </div>
+
+      <label class="col-sm-3 label-align my-2" for="userGroupId"
+        >User Type:</label
+      >
+      <div class="col-sm-3 item-align my-2">
+        <select class="form-control" id="userGroupId" name="userGroupId">
+          <option value="-1">--Select--</option>
+          <option value="1">Admin</option>
+          <option value="2">Student</option>
+          <option value="3">Teacher</option>
+        </select>
+      </div>
+
+      <label class="col-sm-3 label-align my-2" for="gender" >Gender:</label>
+      <div class="col-sm-3 item-align my-2">
+        <select class="form-control" id="gender" name="gender">
+          <option value="-1">--Select--</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <label class="col-sm-3 label-align my-2" hidden for="password">Password:</label>
+      <div hidden class="col-sm-3 item-align my-2">
+        <input
+          type="text"
+          class="form-control"
+          id="password"
+          placeholder="Password"
+          name="password"
+        />
+      </div>
+
+      <label class="col-sm-3 label-align my-2" for="dob">Date of Birth:</label>
+      <div class="col-sm-3 item-align my-2">
+        <input type="date" class="form-control" id="dob" name="dob" />
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addUser"
+        id="addUser"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateUser"
+        id="updateUser"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

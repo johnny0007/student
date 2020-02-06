@@ -1,0 +1,205 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#collegeForm"), objMap);
+    }
+    $("#collegeForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addCollege") 
+          gridHandler.doGridOperation(serviceHost + "/college/add",$("#colleges"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateCollege") 
+          gridHandler.doGridOperation(serviceHost + "/college/update",$("#colleges"),"PATCH",formData,$("#editPopup"));
+    });
+    debugger;
+    if (btnClicked === "newCollege") {
+      document.getElementById("addCollege").style.display = "inline";
+      document.getElementById("updateCollege").style.display = "none";
+    } else if (btnClicked === "editCollege") {
+      document.getElementById("addCollege").style.display = "none";
+      document.getElementById("updateCollege").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="collegeForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+    <label
+      class="col-sm-3 my-2"
+      hidden
+      style="text-align: right"
+      for="collegeId"
+      >College ID:</label
+    >
+    <div class="col-sm-3 my-2 item-align" hidden>
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="collegeId"
+        placeholder="Enter College ID"
+        name="collegeId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="collegeName"
+      >College Name:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="collegeName"
+        placeholder="Enter College Name"
+        name="collegeName"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="collegeType"
+      >College Type:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="collegeType"
+        placeholder="College Type"
+        name="collegeType"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="university"
+      >University:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="university"
+        placeholder="University"
+        name="university"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" hidden for="address.addressID"
+      >Address ID:</label
+    >
+    <div class="col-sm-3 my-2 item-align" hidden>
+      <input
+        type="text"
+        class="form-control"
+        id="address.addressID"
+        placeholder="Address ID"
+        name="address.addressID"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.address"
+      >Address:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.address"
+        placeholder="Address"
+        name="address.address"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.po">PO:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.po"
+        placeholder="PO"
+        name="address.po"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.ps">PS:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.ps"
+        placeholder="PS"
+        name="address.ps"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.state">State:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.state"
+        placeholder="State"
+        name="address.state"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.nationality"
+      >Nationality:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.nationality"
+        placeholder="Nationality"
+        name="address.nationality"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="address.zip">Zip:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="address.zip"
+        placeholder="Zip"
+        name="address.zip"
+      />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addCollege"
+        id="addCollege"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateCollege"
+        id="updateCollege"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

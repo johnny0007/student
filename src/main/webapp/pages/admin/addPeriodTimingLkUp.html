@@ -1,0 +1,108 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#periodTimingForm"), objMap);
+    }
+    $("#periodTimingForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addPeriodTimings") 
+          gridHandler.doGridOperation(serviceHost + "/periodTiming/add",$("#periodTimings"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updatePeriodTimings") 
+          gridHandler.doGridOperation(serviceHost + "/periodTiming/update",$("#periodTimings"),"PATCH",formData,$("#editPopup"));
+    });
+    
+    if (btnClicked === "newPeriodTimings") {
+      document.getElementById("addPeriodTimings").style.display = "inline";
+      document.getElementById("updatePeriodTimings").style.display = "none";
+    } else if (btnClicked === "editPeriodTimings") {
+      document.getElementById("addPeriodTimings").style.display = "none";
+      document.getElementById("updatePeriodTimings").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="periodTimingForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <div class="form-group row">
+      <label class="col-sm-3 my-2" style="text-align: right" for="periodNum"
+      >Period Number:</label
+    >
+    <div class="col-sm-3 my-2 item-align" >
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="periodNum"
+        placeholder="Period Number"
+        name="periodNum" disabled
+      />
+    </div>
+    <label class="col-sm-3 my-2"  style="text-align: right" for="startTime"
+      >Start Time:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="startTime"
+        placeholder="Start Time"
+        name="startTime"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="endTime"
+      >End Time:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="endTime"
+        placeholder="End Time"
+        name="endTime"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addPeriodTimings"
+        id="addPeriodTimings"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updatePeriodTimings"
+        id="updatePeriodTimings"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

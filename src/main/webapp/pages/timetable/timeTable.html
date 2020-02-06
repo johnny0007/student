@@ -1,0 +1,196 @@
+<style>
+  .hidden {
+    display: none;
+  }
+  .displayed{
+      display: block;
+  }
+</style>
+<div class="card-header">
+    <label class="col-sm-3 label-align" for="teacherId">Teacher:</label>
+      <div class="col-sm-3 item-align">
+        <select class="form-control" id="teacherId" name="teacherId">
+          <option value="-1" disabled selected hidden>Select Teacher</option>
+          <option value="3">Arnab</option>
+          <option value="4">Deep</option>
+        </select>
+      </div>
+    <br>
+    
+    <input
+    type="button"
+    value="Get"
+    id="getTimeTable"
+    class="btn btn-info btn-lg"
+  /><br><br>
+<div id="timeSchedule" class="hidden">
+  <input
+    type="button"
+    value="Edit"
+    id="editTime"
+    class="btn btn-info btn-lg"
+  />
+  <input
+    type="button"
+    value="Delete"
+    id="deleteTime"
+    class="btn btn-info btn-lg"
+  />
+  <br />
+  <br />
+  <table
+    class="animated fadeIn card-body"
+    id="timeTable"
+    class="display"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead></thead>
+  </table>
+  <div id="newPopup" class="modal fade" role="dialog"></div>
+  <div id="editPopup" class="modal fade" role="dialog"></div>
+</div>
+<input type="hidden" id="selectedRow" />
+</div>
+<script>
+  var editor; // use a global for the submit and return data rendering in the collegess
+  var btnClicked;
+  var columns;
+$(document).ready(function() {
+    $("#teacherId").on("change",function(e){
+        document.getElementById("timeSchedule").classList.add("hidden");
+    });
+    
+    $.ajax({
+            url:serviceHost + "/periodTiming/getGridTimingColumns",
+            type:"POST",
+            crossdomain: true,
+            success:function(cols)
+            {
+                columns=cols;
+            }
+        });
+    
+    editor=btnClicked=null;
+    $("#getTimeTable").on("click",function(e){
+        if($("#teacherId").val()<=0)
+        {
+            alert("Please select a teacher");
+            return;
+        }
+        if(editor===null || editor===undefined){
+            editor = $("#timeTable").DataTable({
+              processing: true,
+              serverSide: true,
+              searching: true,
+              scrollX: true,
+              paging: false,
+              info: false,
+              "select": {
+                style: 'single',
+                items: 'cell',
+                selector: 'td:not(:first-child)'
+        },
+              ajax: {
+                url: serviceHost + "/timeTable/get",
+                type: "POST",
+                data:function(d){
+                    d.teacherId=$("#teacherId").val();
+                }
+              },
+              columns: columns
+            });
+
+            var searchBox = document.getElementById("timeTable_filter");
+            searchBox.setAttribute("class", "hidden");
+        }
+        else{
+            editor.ajax.reload();
+    }
+        
+    document.getElementById("timeSchedule").classList.remove("hidden");
+});
+
+    $("#newPopup").load("./shared/popup.html");
+    $("#editPopup").load("./shared/popup.html");
+
+    $("#editPopup").on("show.bs.modal", function() {
+      $(this)
+        .find(".modal-header")
+        .find("h1")
+        .text("Update Schedule");
+      var modalBody = $("#editPopup").find(".modal-body");
+      if (modalBody !== undefined) {
+        modalBody.load("./timetable/addTimeTable.html");
+      }
+    });
+
+    $("#newPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+
+    $("#editPopup").on("hidden.bs.modal", function() {
+      clearModal($(this));
+    });
+  });
+
+  function clearModal(modal) {
+    modal
+      .find(".modal-header")
+      .find("h1")
+      .text("");
+    var modalBody = modal.find(".modal-body");
+    if (modalBody !== undefined) {
+      modalBody.html("");
+    }
+  }
+  
+  $("#editTime").click(function(e) {
+    btnClicked = "editTime";
+    var selectedData = editor.cells(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to edit");
+      return;
+    }
+    var cell=editor.cells(".selected");
+    var row=editor.rows((cell[0][0].row)).data()[0];
+    var classes={};
+    classes[cell[0][0].column]=cell.data()[0];
+    var selectJson={
+        day:row.day,
+        classes:classes,
+        teacherId:row.teacherId
+    };
+    $("#selectedRow").val(JSON.stringify(selectJson));
+    
+    $("#editPopup").modal("toggle");
+  });
+
+  $("#deleteTime").click(function(e) {
+    var selectedData = editor.cells(".selected").data();
+    if (selectedData === undefined || selectedData.length === 0) {
+      alert("Please select a row to delete");
+      return;
+    }
+    var result = confirm("Are you sure you want to delete the record?");
+    if (!result) {
+      return;
+    }
+    var cell=editor.cells(".selected");
+    var row=editor.rows((cell[0][0].row)).data()[0];
+    var classes={};
+    classes[cell[0][0].column]=cell.data()[0];
+    var selectJson={
+        day:row.day,
+        classes:classes,
+        teacherId:row.teacherId
+    };
+    gridHandler.doGridOperation(
+      serviceHost + "/timeTable/delete",
+      $("#timeTable"),
+      "DELETE",
+      selectJson,
+      null
+    );
+  });
+</script>

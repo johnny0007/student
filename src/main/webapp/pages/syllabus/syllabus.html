@@ -1,0 +1,147 @@
+<style>
+    .hidden {
+        display: none;
+    }
+    body {
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="container">
+    <label class="col-sm-3 label-align" for="courseId">Course:</label>
+    <div class="col-sm-3 item-align">
+        <select class="form-control" id="courseId" name="courseId">
+            <option value="-1" disabled selected hidden>Select Course</option>
+            <option value="1">B.Tech</option>
+            <option value="2">BCA</option>
+        </select>
+    </div>
+
+    <label class="col-sm-3 label-align" for="streamId">Stream:</label>
+    <div class="col-sm-3 item-align">
+        <select class="form-control" id="streamId" name="streamId">
+            <option value="-1" disabled selected hidden>Select Stream</option>
+            <option value="1">Computer Science and Engineering</option>
+            <option value="2">Information Technology</option>
+            <option value="3">Electronics and Communication Engineering</option>
+        </select>
+    </div>
+
+    <label class="col-sm-3 label-align" for="semesterNo">Semester:</label>
+    <div class="col-sm-3 item-align">
+        <select class="form-control" id="semesterNo" name="semesterNo">
+            <option value="-1" disabled selected hidden>Select Semester</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div><br>
+
+    <label class="col-sm-3 label-align" for="subjectCode">Subject:</label>
+    <div class="col-sm-3 item-align">
+        <select class="form-control" id="subjectCode" name="subjectCode">
+            <option value="-1" disabled selected hidden>Select Subject</option>
+            <option value="HU101">English</option>
+            <option value="HU102">Values & Ethics</option>
+        </select>
+    </div><br>
+
+
+    <input type="button" value="Get" id="getSyllebusVersions" class="btn btn-info btn-lg"/>
+
+    <div id="versionsContainer">
+        <table class="animated fadeIn card-body" id="syllebusVersions" class="display" cellspacing="0" width="100%">
+            <thead></thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    var editor;
+    $(document).ready(function (e) {
+        if (editor === null || editor === undefined) {
+            editor = $("#syllebusVersions").DataTable({
+                processing: true,
+                serverSide: true,
+                searching: true,
+                scrollX: true,
+                paging: false,
+                info: false,
+                "select": {
+                    style: 'single'
+                },
+                ajax: {
+                    url: serviceHost + "/syllebusVersions/get",
+                    type: "POST",
+                    data: function (d) {
+                        d.subjectCode = $("#teacherId").val();
+                    }
+                },
+                columns: [
+                    {
+                        data: "subjectCode",
+                        title: "Subject Code",
+                        searchable: true,
+                        orderable: false,
+                        className: "searchable"
+                    },
+                    {data: "syllebusVersion", title: "Version", className: "searchable", orderable: false},
+                    {data: "subjectName", title: "Subject Name", className: "searchable", orderable: false},
+                    {
+                        data: "updatedTimeStamp",
+                        title: "Updated Time",
+                        orderable: true,
+                        className: "searchable"
+                    },
+                    {
+                        data: "updatedBy",
+                        title: "Updated By",
+                        orderable: false,
+                        searchable: true,
+                        className: "searchable"
+                    },
+                    {
+                        data: "semesterNo",
+                        title: "Semester No",
+                        orderable: true,
+                        searchable: true,
+                        className: "searchable"
+                    }
+                ]
+            });
+
+            $(".dataTables_scrollHead thead tr")
+                    .clone(true)
+                    .appendTo(".dataTables_scrollHead thead");
+            $(".dataTables_scrollHead thead tr:eq(1) th").each(function (i) {
+                var title = $(this).text();
+                $(this).removeClass("sorting");
+                if ($(this).hasClass("searchable")) {
+                    $(this).html(
+                            '<input id="search_' +
+                            i +
+                            '" type="text" placeholder="Search ' +
+                            title +
+                            '" style="max-width:120px;" />'
+                            );
+
+                    $("#search_" + i).on("input", function () {
+                        if (editor.column(i).search() !== this.value) {
+                            editor
+                                    .columns(i)
+                                    .search(this.value, true, false)
+                                    .draw();
+                        }
+                    });
+                } else {
+                    $(this).html("");
+                }
+            });
+
+            var searchBox = document.getElementById("syllebusVersions_filter");
+            searchBox.setAttribute("style", "display:none");
+        }
+        else {
+            editor.ajax.reload();
+        }
+    });
+</script>

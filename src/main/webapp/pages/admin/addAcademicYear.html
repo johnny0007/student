@@ -1,0 +1,122 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#academicYearForm"), objMap);
+    }
+    $("#academicYearForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addAcademicYear") 
+        gridHandler.doGridOperation(serviceHost + "/academicYear/add",$("#academicYear"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateAcademicYear")
+        gridHandler.doGridOperation(serviceHost + "/academicYear/update",$("#academicYear"),"PATCH",formData,$("#editPopup"));
+    });
+    debugger;
+    if (btnClicked === "newAcademicYear") {
+      document.getElementById("addAcademicYear").style.display = "inline";
+      document.getElementById("updateAcademicYear").style.display = "none";
+    } else if (btnClicked === "editAcademicYear") {
+      document.getElementById("addAcademicYear").style.display = "none";
+      document.getElementById("updateAcademicYear").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="academicYearForm">
+  <div
+    class="col-sm-12 my-2"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+    <label class="col-sm-3 my-2" hidden style="text-align: right" for="yearId"
+      >ID:</label
+    >
+    <div class="col-sm-3 my-2 item-align" hidden>
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="yearId"
+        placeholder="Enter AcademicYear ID"
+        name="yearId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="startYear"
+      >Academic Start Year:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="startYear"
+        placeholder="Academic Start Year"
+        name="startYear"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="endYear"
+      >Academic End Year:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="endYear"
+        placeholder="Academic End Year"
+        name="endYear"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="courseId">Course Id:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="courseId"
+        placeholder="Course Id"
+        name="courseId"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addAcademicYear"
+        id="addAcademicYear"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateAcademicYear"
+        id="updateAcademicYear"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

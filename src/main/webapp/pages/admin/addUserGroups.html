@@ -1,0 +1,83 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#UserGroupsForm"), objMap);
+    }
+    $("#addUserForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addUserGroups") saveUserGroups(formData);
+      else if (submittedBtn === "updateUserGroups") updateUserGroups(formData);
+    });
+    debugger;
+    if (btnClicked === "newUserGroups") {
+      document.getElementById("addUserGroups").style.display = "inline";
+      document.getElementById("updateUserGroups").style.display = "none";
+    } else if (btnClicked === "editUserGroups") {
+      document.getElementById("addUserGroups").style.display = "none";
+      document.getElementById("updateUserGroups").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="UserGroupsForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+    <label class="col-sm-3 my-2 label-align" for="GroupName">GroupName:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="GroupName"
+        placeholder="Group Name"
+        name="GroupName"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addUserGroups"
+        id="addUserGroups"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateUserGroups"
+        id="updateUserGroups"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

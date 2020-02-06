@@ -1,0 +1,598 @@
+<style>
+  .label-align {
+    text-align: center;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+  .scrollable-menu {
+    height: auto;
+    max-height: 350px;
+    overflow-x: hidden;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+      debugger
+//    if ($("#selectedRow").val() !== "") {
+//      var objMap = {};
+//      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+//      populateFrmDataFromMapper($("#studentsForm"), objMap);
+//    }
+    $("#studentsForm").on("submit", function(e) {
+        debugger
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addStudents") 
+         gridHandler.doGridOperation(serviceHost + "/student/add",null,"POST",formData,null);
+      else if (submittedBtn === "updateStudents") 
+          gridHandler.doGridOperation(serviceHost + "/student/update",null,"PATCH",formData,null);
+    });
+
+//    if (btnClicked === "newStudents") {
+//      document.getElementById("addStudents").style.display = "inline";
+//      document.getElementById("updateStudents").style.display = "none";
+//    } else if (btnClicked === "editStudents") {
+//      document.getElementById("addStudents").style.display = "none";
+//      document.getElementById("updateStudents").style.display = "inline";
+//    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<script>
+  document.getElementById("basicDetailsbtn").click();
+  document.getElementById("addressDetailsbtn").click();
+  document.getElementById("academicDetailsbtn").click();
+</script>
+<form id="studentsForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+
+  <div class="card-header"><h2>Add Student Details</h2></div>
+  <div class="dropdown">
+    <button
+      class="btn btn-basic dropdown-toggle"
+      style="width: 100%; background-color: rgb(141, 204, 241); padding: 14px 28px; font-size: 16px; display: block; border:darkgoldenrod"
+      type="button"
+      data-toggle="dropdown"
+      id="basicDetailsbtn"
+      onclick="loadBasicDetails()"
+    >
+      Basic Details
+    </button>
+    <div class="form-group row card-body" id="basicDetails">
+    <label class="col-sm-3 my-2 label-align" for="user.userId" hidden
+        >User ID:</label
+      >
+      <div class="col-sm-3 my-2 item-align" hidden>
+        <input
+          type="text"
+          class="form-control"
+          id="user.userId"
+          placeholder="User ID"
+          name="user.userId"
+        />
+      </div>
+      <div class="form-group row my-2">
+        <label class="col-sm-3 my-2 label-align" for="user.firstName"
+          >First Name:</label
+        >
+        <div class="col-sm-3 item-align my-2">
+          <input
+            type="text"
+            class="form-control"
+            id="user.firstName"
+            placeholder="Student First Name"
+            name="user.firstName"
+          />
+        </div>
+        <br />
+        <label class="col-sm-3 my-2 label-align" for="user.middleName"
+          >Middle Name:</label
+        >
+        <div class="col-sm-3 item-align my-2">
+          <input
+            type="text"
+            class="form-control"
+            id="user.middleName"
+            placeholder="Student Middle Name"
+            name="user.middleName"
+          />
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="user.lastName"
+          >Last Name:</label
+        >
+        <div class="col-sm-3 item-align my-2">
+          <input
+            type="text"
+            class="form-control"
+            id="user.lastName"
+            placeholder="Student Last Name"
+            name="user.lastName"
+          />
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="user.phoneNo"
+          >Mobile Number:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <input
+            type="number"
+            size="10"
+            class="form-control"
+            id="user.phoneNo"
+            placeholder="Enter Mobile"
+            name="user.phoneNo"
+          />
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="user.email">Email:</label>
+        <div class="col-sm-3 my-2 item-align">
+          <input
+            type="text"
+            class="form-control"
+            id="user.email"
+            placeholder="Enter Email"
+            name="user.email"
+          />
+        </div>
+
+        <label class="col-sm-3 my-2 label-align" for="user.userGroupId"
+          >User Type:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <select class="form-control" id="user.userGroupId" name="user.userGroupId" disabled>
+            <option value="-1">--Select--</option>
+            <option value="1">Admin</option>
+            <option value="2" selected>Student</option>
+          </select>
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="user.gender">Gender:</label>
+        <div class="col-sm-3 my-2 item-align">
+          <select class="form-control" id="user.gender" name="user.gender">
+            <option value="-1">--Select--</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <label class="col-sm-3 my-2 label-align" for="user.password"
+          >Password:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <input
+            type="text"
+            class="form-control"
+            id="user.password"
+            placeholder="Password"
+            name="user.password"
+          />
+        </div>
+
+        <label class="col-sm-3 my-2 label-align" for="user.dob"
+          >Date of Birth:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <input type="date" class="form-control" id="user.dob" name="user.dob" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button
+      class="btn btn-basic dropdown-toggle"
+      style="width: 100%; background-color: rgb(141, 204, 241); padding: 14px 28px; font-size: 16px; display: block; border:darkgoldenrod"
+      type="button"
+      data-toggle="dropdown"
+      id="academicDetailsbtn"
+      onclick="loadAcademicDetails()"
+    >
+      Academic and Parent Details
+    </button>
+    <div class="form-group" id="academicDetails">
+      <div class="card-header">Academic Details</div>
+      <div class="card-body row">
+        <div class="form-group row my-2">
+          
+          <label class="col-sm-3 my-2 label-align" for="collegeId"
+            >College:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="collegeId"
+              placeholder="College"
+              name="collegeId"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="courseId"
+            >Course:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="courseId"
+              placeholder="Course"
+              name="courseId"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="streamId"
+            >Stream:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="streamId"
+              placeholder="Stream"
+              name="streamId"
+            />
+          </div>         
+          <label class="col-sm-3 my-2 label-align" for="govtIdNumber"
+            >Govt. Id Number:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="govtIdNumber"
+              placeholder="Govt. Id Number"
+              name="govtIdNumber"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="govtIdType"
+            >Govt. Id Type:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="govtIdType"
+              placeholder="Govt. Id Type"
+              name="govtIdType"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="admissionMode"
+            >Admission Mode:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="admissionMode"
+              placeholder="Admission Mode"
+              name="admissionMode"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="rank">Rank:</label>
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="rank"
+              placeholder="Rank"
+              name="rank"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="entranceExam"
+            >Entrance Exam:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="entranceExam"
+              placeholder="Entrance Exam"
+              name="entranceExam"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="secondarySchoolName"
+            >Secondary School Name:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="secondarySchoolName"
+              placeholder="Secondary School Name"
+              name="secondarySchoolName"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="secondaryBoard"
+            >Secondary Board:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="secondaryBoard"
+              placeholder="Secondary Board"
+              name="secondaryBoard"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="secondaryMarks"
+            >Secondary Marks:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="secondaryMarks"
+              placeholder="Secondary Marks"
+              name="secondaryMarks"
+            />
+          </div>
+          <label
+            class="col-sm-3 my-2 label-align "
+            for="higherSecondarySchoolName"
+            >Higher Secondary School Name:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="higherSecondarySchoolName"
+              placeholder="Higher Secondary School Name"
+              name="higherSecondarySchoolName"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="higherSecondaryBoard"
+            >Higher Secondary Board:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="higherSecondaryBoard"
+              placeholder="Higher Secondary Board"
+              name="higherSecondaryBoard"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align " for="higherSecondaryMarks"
+            >Higher Secondary Marks:</label
+          >
+          <div class="col-sm-3 my-2 item-align ">
+            <input
+              type="text"
+              class="form-control"
+              id="higherSecondaryMarks"
+              placeholder="Higher Secondary Marks"
+              name="higherSecondaryMarks"
+            />
+          </div>
+        </div>
+        <div class="card-header" style="width: 100%;">Parent Details</div>
+        <div class="card-body row" style="width: 100%;">
+          <label class="col-sm-3 my-2 label-align" for="parentFirstName"
+            >Parent First Name:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentFirstName"
+              placeholder="Parent First Name"
+              name="parentFirstName"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="parentMiddleName"
+            >Parent Middle Name:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentMiddleName"
+              placeholder="Parent Middle Name"
+              name="parentMiddleName"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="parentLastName"
+            >Parent Last Name:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentLastName"
+              placeholder="Parent Last Name"
+              name="parentLastName"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="parentRelation"
+            >Parent Relation:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentRelation"
+              placeholder="Parent Relation"
+              name="parentRelation"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="parentPhoneNo"
+            >Parent Phone No:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentPhoneNo"
+              placeholder="Parent Phone No"
+              name="parentPhoneNo"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="parentEmail"
+            >Parent EmailID:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="parentEmail"
+              placeholder="Parent EmailID"
+              name="parentEmail"
+            />
+          </div>
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="yearId"
+          >Academic Year:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <input
+            type="text"
+            class="form-control"
+            id="yearId"
+            placeholder="Academic Year"
+            name="yearId"
+          />
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="status" hidden
+          >status:</label
+        >
+        <div class="col-sm-3 my-2 item-align" hidden>
+          <input
+            type="text"
+            class="form-control"
+            id="status"
+            placeholder="status"
+            name="status" value="1"
+          />
+        </div>
+        <label class="col-sm-3 my-2 label-align" for="passOutYear"
+          >Pass Out Year:</label
+        >
+        <div class="col-sm-3 my-2 item-align">
+          <input
+            type="text"
+            class="form-control"
+            id="passOutYear"
+            placeholder="Pass Out Year"
+            name="passOutYear"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button
+      class="btn btn-basic dropdown-toggle"
+      style="width: 100%; background-color: rgb(141, 204, 241); padding: 14px 28px; font-size: 16px; display: block; border:darkgoldenrod"
+      type="button"
+      data-toggle="dropdown"
+      id="addressDetailsbtn"
+      onclick="loadAddresDetails()"
+    >
+      Adress Details
+    </button>
+    <div class="form-group row card-body">
+      <div id="addresDetails">
+        <div class="form-group row card-body">
+          <label class="col-sm-3 my-2 label-align" for="address.addressID"
+            >Address Id:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.addressID"
+              placeholder="Address Id"
+              name="address.addressID"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.address"
+            >Address:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.address"
+              placeholder="Address"
+              name="address.address"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.po">PO:</label>
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.po"
+              placeholder="PO"
+              name="address.po"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.ps">PS:</label>
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.ps"
+              placeholder="PS"
+              name="address.ps"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.state">State:</label>
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.state"
+              placeholder="State"
+              name="address.state"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.nationality"
+            >Nationality:</label
+          >
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.nationality"
+              placeholder="Nationality"
+              name="address.nationality"
+            />
+          </div>
+          <label class="col-sm-3 my-2 label-align" for="address.zip">ZIP:</label>
+          <div class="col-sm-3 my-2 item-align">
+            <input
+              type="text"
+              class="form-control"
+              id="address.zip"
+              placeholder="ZIP"
+              name="address.zip"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12" style="text-align: center">
+    <input
+      type="submit"
+      name="addStudents"
+      id="addStudents"
+      class="btn btn-primary frmBtn"
+      value="Add"
+    />
+  </div>
+</form>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Student Manager</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link type="text/css" rel="stylesheet" href="../css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/homePage.css" />
+    <link rel="stylesheet" href="../css/profile.css" />
+    <link rel="stylesheet" href="../css/select.dataTables.min.css" />
+
+    <link href="../css/vendor/style.css" rel="stylesheet" />
+    <link href="../css/vendor/pace.min.css" rel="stylesheet" />
+    <link href="../css/StyleSheet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/vendor/fontawesome/css/all.min.css" />
+    <script type="text/javascript" src="../css/vendor/fontawesome/js/all.min.js"></script>
+
+    <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../js/dataTables.select.min.js"></script>
+
+    <script type="text/javascript" src="../js/popper.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/polyfiller.js"></script>
+
+    <script type="text/javascript" src="../js/global.js"></script>
+    <script type="text/javascript" src="../js/menuController.js"></script>
+    <script type="text/javascript" src="../js/userController.js"></script>
+    <script type="text/javascript" src="../js/autoComplete.js"></script>
+    <script type="text/javascript" src="../js/orderManagementController.js"></script>
+    <script type="text/javascript" src="../js/paymentController.js"></script>
+    <script type="text/javascript" src="../js/defaulterController.js"></script>
+    <script type="text/javascript" src="../js/GridOperationHandler.js"></script>
+
+    <script>
+        var gridHandler=new GridOperationHandler();
+        webshims.setOptions("forms-ext", { types: "date" });
+        webshims.polyfill("forms forms-ext");
+    </script>
+
+    <style type="text/css">
+      #loading-img {
+        background: url(http://preloaders.net/preloaders/360/Velocity.gif)
+          center center no-repeat;
+        height: 100%;
+        z-index: 20;
+      }
+      .overlay {
+        background: #e9e9e9;
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+        z-index: 20;
+      }
+      .mainContainerClass {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-light navbar-expand-lg bg-dark">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="selectedMenu" class="navbar-toggler text-white"></div>
+        <div class="navbar-collapse collapse" id="navbarNav">          
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="navbar-brand text-white" href="#" onclick="loadHomePage()">Home</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="navbar-brand text-white"
+                href="#"
+                onclick="loadUserPages()"
+                >User Management</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="navbar-brand text-white"
+                href="#"
+                onclick="loadStudentPages()"
+                >Student Management</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="navbar-brand text-white"
+                href="#"
+                onClick="loadAdminPages()"
+                >Admin Work</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="navbar-brand text-white"
+                href="#"
+                onClick="loadTimeTablePages()"
+                >Time Table</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="navbar-brand text-white"
+                href="#"
+                onClick="loadSyllabus()"
+                >Syllabus</a
+              >
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+              <a
+                class="navbar-brand"
+                data-toggle="dropdown"
+                href="#"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                id="loginid"
+              >
+                👤
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="#" onClick="loadMyProfilePage()">
+                  <i class="fa fa-user fa-2x"></i> My Profile</a
+                >
+                <a class="dropdown-item" href="#" onClick="onLogOutClick()">
+                  <i class="fa fa-lock fa-2x"></i> Logout</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container h-10 py-0" style="max-width: 100%;" id="content">
+      <div class="row h-100 mt-5">
+        <aside class="col-md-2">
+          <div class="mt-5 mb-3" id="sidemenu">
+            <ul
+              class="nav flex-md-column flex-row justify-content-between"
+              id="sideBar"
+            ></ul>
+          </div>
+        </aside>
+        <main class="col-md-10 " id="main">
+          <div class="row">
+            <div class="col">
+              <div class="tab-content py-3">
+                <div
+                  class="tab-pane active"
+                  id="mainContainer"
+                  style="min-height: 31em;"
+                >
+                  <script>
+                    loadHomePage();
+                  </script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <footer class="bg-dark text-white page-footer pt-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 col-sm-6 pl-0">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a href="https://www.Techxovek.com" class="nav-link">Support</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 text-right">
+            <a href="https://www.Techxovek.com">Techxovek</a>
+            <span
+              >&copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              .
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script>
+    var hh = $("#header").outerHeight();
+    var fh = $("footer").outerHeight();
+
+    $(".navbar").affix({
+      offset: {
+        top: hh,
+        bottom: hh - 200
+      }
+    });
+    $("#sidemenu").affix({
+      offset: {
+        top: hh,
+        bottom: fh + 50
+      }
+    });
+  </script>
+</html>

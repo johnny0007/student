@@ -1,0 +1,152 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#subjectForm"), objMap);
+    }
+    $("#subjectForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addSubjects") 
+          gridHandler.doGridOperation(serviceHost + "/subject/add",$("#Subjects"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateSubjects") 
+          gridHandler.doGridOperation(serviceHost + "/subject/update",$("#Subjects"),"PATCH",formData,$("#editPopup"));
+    });
+    debugger;
+    if (btnClicked === "newSubjects") {
+      document.getElementById("addSubjects").style.display = "inline";
+      document.getElementById("updateSubjects").style.display = "none";
+      $("#subjectCode").prop("disabled",false);
+    } else if (btnClicked === "editSubjects") {
+      document.getElementById("addSubjects").style.display = "none";
+      document.getElementById("updateSubjects").style.display = "inline";
+      $("#subjectCode").prop("disabled",true);
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="subjectForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <!-- <div id="studentFormDiv"> -->
+
+  <!-- <input type="hidden" id="customerIdHidden" value=0> -->
+  <div class="form-group row">
+      <label class="col-sm-3 my-2" style="text-align: right" for="subjectCode"
+      >Subject Code:</label
+    >
+    <div class="col-sm-3 my-2 item-align" >
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="subjectCode"
+        placeholder="Subject Code"
+        name="subjectCode"
+      />
+    </div>
+    <label class="col-sm-3 my-2"  style="text-align: right" for="streamId"
+      >Stream:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="streamId"
+        placeholder="Stream ID"
+        name="streamId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="semesterNo"
+      >Semester No:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="semesterNo"
+        placeholder="Semester No"
+        name="semesterNo"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="subjectName"
+      >Name:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="subjectName"
+        placeholder="Subject Name"
+        name="subjectName"
+      />
+    </div>
+    <label class="col-sm-3 my-2" style="text-align: right" for="departmentId"
+      >Department:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="departmentId"
+        placeholder="Enter Section ID"
+        name="departmentId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="subjectType"
+      >Subject Type:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="subjectType"
+        placeholder="Type"
+        name="subjectType"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addSubjects"
+        id="addSubjects"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateSubjects"
+        id="updateSubjects"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

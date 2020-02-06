@@ -1,0 +1,116 @@
+<style>
+  .label-align {
+    text-align: right;
+  }
+  .item-align {
+    padding-left: 0px;
+  }
+</style>
+
+<script>
+  var submittedBtn;
+  //const form = document.getElementById("addUserForm");
+  //form.addEventListener('submit', handleFormSubmit);
+  $(document).ready(function() {
+    if ($("#selectedRow").val() !== "") {
+      var objMap = {};
+      prepareObjectMap(JSON.parse($("#selectedRow").val()), "", objMap);
+      populateFrmDataFromMapper($("#SectionsForm"), objMap);
+    }
+    $("#SectionsForm").on("submit", function(e) {
+      // Stop the form from submitting since we’re handling that with AJAX.
+      event.preventDefault();
+      // Call our function to get the form data.
+
+      const formData = formToJSON(this.elements);
+
+      if (submittedBtn === "addSections") 
+          gridHandler.doGridOperation(serviceHost + "/section/add",$("#Sections"),"POST",formData,$("#newPopup"));
+      else if (submittedBtn === "updateSections") 
+          gridHandler.doGridOperation(serviceHost + "/section/update",$("#Sections"),"PATCH",formData,$("#editPopup"));
+    });
+    if (btnClicked === "newSections") {
+      document.getElementById("addSections").style.display = "inline";
+      document.getElementById("updateSections").style.display = "none";
+    } else if (btnClicked === "editSections") {
+      document.getElementById("addSections").style.display = "none";
+      document.getElementById("updateSections").style.display = "inline";
+    }
+  });
+  $(".frmBtn").click(function() {
+    submittedBtn = $(this).attr("name");
+  });
+</script>
+<form id="SectionsForm">
+  <div
+    class="col-sm-12"
+    id="successDiv"
+    style="padding-left:0px; display: none"
+  ></div>
+  <div class="form-group row">
+    <label class="col-sm-3 my-2" style="text-align: right" for="streamId"
+      >Stream ID:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        size="10"
+        class="form-control"
+        id="streamId"
+        placeholder="Enter Stream ID"
+        name="streamId"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="section">Section:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="section"
+        placeholder="Section"
+        name="section"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="seatCapacity"
+      >Seat Capacity:</label
+    >
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="seatCapacity"
+        placeholder="Seat Capacity"
+        name="seatCapacity"
+      />
+    </div>
+    <label class="col-sm-3 my-2 label-align" for="tic">TIC:</label>
+    <div class="col-sm-3 my-2 item-align">
+      <input
+        type="text"
+        class="form-control"
+        id="tic"
+        placeholder="TIC"
+        name="tic"
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12" style="text-align: center">
+      <input
+        type="submit"
+        name="addSections"
+        id="addSections"
+        class="btn btn-primary frmBtn"
+        value="Add"
+      />
+      <input
+        type="submit"
+        name="updateSections"
+        id="updateSections"
+        class="btn btn-primary frmBtn"
+        value="Update"
+      />
+      <button class="btn btn-primary frmBtn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</form>

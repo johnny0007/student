@@ -1,0 +1,79 @@
+body,
+html {
+  height: 100%;
+} /* must be relative for scrollspy to work */
+body {
+  position: relative;
+}
+.min-100 {
+  min-height: 100vh;
+}
+.navbar.affix-top,
+.navbar.affix-bottom {
+  position: static;
+}
+.navbar.affix {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+  transition: all 0.35s ease;
+}
+#sidemenu.affix-top,
+#sidemenu.affix {
+  position: static;
+}
+#sidemenu.affix-bottom {
+  position: relative;
+}
+@media (min-width: 768px) {
+  #sidemenu.affix {
+    position: fixed;
+    top: 40px;
+  }
+}
+
+#sidemenu .nav-link.active,
+#sidemenu .nav-link:hover,
+#sidemenu .nav-link:focus {
+  color: rgb(248, 248, 250);
+  background-color: #00acee;
+  transition: all 1s;
+}
+.anchor {
+  display: block;
+  height: 70px;
+  margin-top: -70px;
+  visibility: hidden;
+}
+#content .nav-link {
+  color: #555;
+  transition: all 0.2 ease;
+}
+footer a {
+  color: #ccc;
+}
+footer a:hover,
+footer a:focus {
+  color: #eee;
+}
+
+#navbarNav .navbar-brand.active,
+#navbarNav .navbar-brand:hover,
+#navbarNav .navbar-brand:focus {
+  color: rgb(250, 251, 252);
+  background-color: #00acee;
+  transition: all 1s;
+  font-family: "Lato", sans-serif;
+}
+
+#navbarNav .navbar-collapse {
+  border-radius: 1px;
+}
+
+#navbarNav .navbar-brand
+{
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
